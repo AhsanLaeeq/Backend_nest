@@ -19,6 +19,7 @@ router.post('/createuser',[
 ],
 
 async(req,res)=>{
+    let success = false;
     const error = validationResult(req);
     if (!error.isEmpty()){
         return res.status(400).json({error:error.array()});
@@ -42,7 +43,8 @@ const data={
     id:user.id
 }}
 const authtoken=jwt.sign(data,JWT_SECRET);
-res.json({authtoken})
+success = true;
+res.json({success,authtoken})
 
 
 
@@ -61,6 +63,7 @@ router.post('/login', [
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Password cannot be blank').exists()
 ], async (req, res) => {
+    let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ error: errors.array() });
@@ -93,8 +96,9 @@ router.post('/login', [
             }
         };
         const authtoken = jwt.sign(data, JWT_SECRET);
+        success = true;
 
-        res.json({ authtoken });
+        res.json({ success,authtoken });
 
     } catch (error) {
         console.error("Login Error:", error.message);
